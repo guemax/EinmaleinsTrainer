@@ -1,3 +1,4 @@
+use std::fmt::format;
 use std::io;
 use std::io::Write;
 use std::num::ParseIntError;
@@ -26,28 +27,46 @@ fn fg_red(text: String) -> String{
 }
 
 
-fn align_equation_at_equal_and_multiplication_sign(num_1: u32, num_2: u32, result: u32) -> String {
-    let num_1_string: String;
-    let num_2_string: String;
-    let result_string: String;
+fn format_first_factor(first_factor: u32) -> String {
+	if is_single_digit(first_factor) {
+		format!(" {first_factor}")
+	} else {
+		format!("{first_factor}")
+	}
+}
 
-    num_1_string = match num_1.to_string().len() {
-		1 => format!(" {num_1}"),
-		2 => format!("{num_1}"),
-		_ => todo!()
-    };
-    num_2_string = match num_2.to_string().len() {
-		1 => format!("{num_2} "),
-		2 => format!("{num_2}"),
-		_ => todo!()
-    };
-    result_string = match result.to_string().len() {
-		1 => format!("  "),
-		2 => format!(" "),
-		3 => format!(""),
-		_ => todo!()
-    };
-    return format!("{num_1_string} ✕ {num_2_string} = {result_string}");
+fn is_single_digit(number: u32) -> bool {
+	number.to_string().len() == 1
+}
+
+fn is_double_digit(number: u32) -> bool {
+	number.to_string().len() == 2
+}
+
+fn format_second_factor(second_factor: u32) -> String {
+	if is_single_digit(second_factor) {
+		format!("{second_factor}")
+	} else {
+		format!("{second_factor} ")
+	}
+}
+
+fn format_product_placeholder(product: u32) -> String {
+	if is_single_digit(product) {
+		format!("  ")
+	} else if is_double_digit(product) {
+		format!(" ")
+	} else {
+		format!("")
+	}
+}
+
+
+fn align_equation_at_equal_sign_and_at_multiplication_sign(first_factor: u32, second_factor: u32, product: u32) -> String {
+    format!("{} ✕ {} = {}",
+			format_first_factor(first_factor),
+			format_second_factor(second_factor),
+			format_product_placeholder(product))
 }
 
 
@@ -71,7 +90,7 @@ fn exit_message() {
 fn ask_question(first_factor: u32, second_factor: u32, product: u32) {
 	let indentation = "    ";
 
-	print!("{}{}", indentation, align_equation_at_equal_and_multiplication_sign(first_factor, second_factor, product));
+	print!("{}{}", indentation, align_equation_at_equal_sign_and_at_multiplication_sign(first_factor, second_factor, product));
 	io::stdout().flush().unwrap();
 }
 
