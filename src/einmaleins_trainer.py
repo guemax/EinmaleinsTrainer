@@ -9,39 +9,40 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        numbers()
-        q_label_text = QLabel(f'Was ist {number_one} * {number_two}?', alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
-        font = q_label_text.font()
-        font.setPointSize(20)
-        q_label_text.setFont(font)
+        generate_factors()
 
-        self.input = QLineEdit(self)
-        self.input.setMaxLength(3)
-        self.input.move(225, 75)
-        font = self.input.font()
+        question_widget = QLabel(f'Was ist {first_factor} * {second_factor}?', alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        font = question_widget.font()
+        font.setPointSize(20)
+        question_widget.setFont(font)
+
+        self.answer_widget = QLineEdit(self)
+        self.answer_widget.setMaxLength(3)
+        self.answer_widget.move(225, 75)
+        font = self.answer_widget.font()
         font.setPointSize(15)
-        self.input.setFont(font)
-        self.input.setFixedSize(40, 25)
-        self.onlyInt = QIntValidator(self)
-        self.input.setValidator(self.onlyInt)
-        self.input.returnPressed.connect(self.return_pressed)
+        self.answer_widget.setFont(font)
+        self.answer_widget.setFixedSize(40, 25)
+        self.only_allow_integers = QIntValidator(self)
+        self.answer_widget.setValidator(self.only_allow_integers)
+        self.answer_widget.returnPressed.connect(self.validate_answer)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
         self.setFixedSize(QSize(500, 400))
 
-        self.setCentralWidget(q_label_text)
+        self.setCentralWidget(question_widget)
 
-    def return_pressed(self):
+    def validate_answer(self):
         print("Return pressed!")
-        user_result = self.input.text()
+        user_result = self.answer_widget.text()
 
 
-def numbers():
-    global number_one, number_two, expected_result
-    number_one = random.randint(0, 20)
-    number_two = random.randint(0, 20)
-    expected_result = number_one * number_two
+def generate_factors():
+    global first_factor, second_factor, product
+    first_factor = random.randint(0, 20)
+    second_factor = random.randint(0, 20)
+    product = first_factor * second_factor
 
 
 app = QApplication([])
