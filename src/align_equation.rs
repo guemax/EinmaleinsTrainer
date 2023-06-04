@@ -1,6 +1,11 @@
 pub fn align_equation_at_equal_sign_and_at_multiplication_sign(first_factor: u32,
                                                            second_factor: u32,
                                                            product: u32) -> String {
+	// Equation is going to look like this:
+	//     1 ✕ 1  =   1
+	//     1 ✕ 10 =  10
+	//    10 ✕ 1  =  10
+	//    10 ✕ 10 = 100
     format!("{} ✕ {} = {}",
 			format_first_factor(first_factor),
 			format_second_factor(second_factor),
