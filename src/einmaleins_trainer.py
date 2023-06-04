@@ -50,7 +50,6 @@ class MainWindow(QMainWindow):
         return widget
 
     def __init_result_widget(self) -> QLabel:
-        print("Hallo!")
         widget = QLabel(self, alignment=Qt.AlignmentFlag.AlignHCenter)
         widget.setFixedSize(500, 25)
         widget.move(Qt.AlignmentFlag.AlignHCenter, 140)
@@ -64,7 +63,6 @@ class MainWindow(QMainWindow):
     def show_result(self) -> None:
         answer = int(self.answer_widget.text())
         expected_answer = self.product
-        print(expected_answer)
 
         if answer == expected_answer:
             self.result_widget.setText('Das ist richtig!')
