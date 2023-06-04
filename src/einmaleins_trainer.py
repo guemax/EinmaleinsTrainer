@@ -10,10 +10,10 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         numbers()
-        qLabelText = QLabel(f'Was ist {number1} * {number2}?', alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
-        font = qLabelText.font()
+        q_label_text = QLabel(f'Was ist {number_one} * {number_two}?', alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+        font = q_label_text.font()
         font.setPointSize(20)
-        qLabelText.setFont(font)
+        q_label_text.setFont(font)
 
         self.input = QLineEdit(self)
         self.input.setMaxLength(3)
@@ -30,19 +30,18 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Einmaleins Trainer")
         self.setFixedSize(QSize(500, 400))
 
-        self.setCentralWidget(qLabelText)
+        self.setCentralWidget(q_label_text)
 
     def return_pressed(self):
         print("Return pressed!")
-        userResult = self.input.text()
-        print(userResult)
+        user_result = self.input.text()
 
 
 def numbers():
-    global number1, number2, expectedResult
-    number1 = random.randint(0, 20)
-    number2 = random.randint(0, 20)
-    expectedResult = number1 * number2
+    global number_one, number_two, expected_result
+    number_one = random.randint(0, 20)
+    number_two = random.randint(0, 20)
+    expected_result = number_one * number_two
 
 
 app = QApplication([])
