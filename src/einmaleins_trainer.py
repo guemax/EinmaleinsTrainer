@@ -9,10 +9,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        factors, self.product = generate_factors()
-        self.first_factor, self.second_factor = factors
-
-        self.question_widget = self.__init_question_widget(self.first_factor, self.second_factor)
+        self.question_widget = self.__init_question_widget()
         self.answer_widget = self.__init_answer_widget()
         self.result_widget = self.__init_result_widget()
 
@@ -25,10 +22,17 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.question_widget)
 
+        self.first_factor = 0
+        self.second_factor = 0
+        self.product = 0
+
+        # Ask first question
+        self.set_newly_generated_factors_and_product()
+        self.ask_question(self.first_factor, self.second_factor)
+
     @staticmethod
-    def __init_question_widget(first_factor:int, second_factor: int) -> QLabel:
-        widget = QLabel(f'Was ist {first_factor} * {second_factor}?',
-                        alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
+    def __init_question_widget() -> QLabel:
+        widget = QLabel(alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         font = widget.font()
         font.setPointSize(20)
         widget.setFont(font)
@@ -37,6 +41,10 @@ class MainWindow(QMainWindow):
 
     def ask_question(self, first_factor: int, second_factor: int) -> None:
         self.question_widget.setText(f'Was ist {first_factor} * {second_factor}?')
+
+    def set_newly_generated_factors_and_product(self) -> None:
+        factors, self.product = generate_factors_and_product()
+        self.first_factor, self.second_factor = factors
 
     def __init_answer_widget(self) -> QLineEdit:
         widget = QLineEdit(self)
@@ -72,13 +80,12 @@ class MainWindow(QMainWindow):
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
 
-        factors, self.product = generate_factors()
-        self.first_factor, self.second_factor = factors
+        self.set_newly_generated_factors_and_product()
         self.ask_question(self.first_factor, self.second_factor)
         self.answer_widget.setText("")
 
 
-def generate_factors() -> ((int, int), int):
+def generate_factors_and_product() -> ((int, int), int):
     first_factor = random.randint(0, 20)
     second_factor = random.randint(0, 20)
     product = first_factor * second_factor
