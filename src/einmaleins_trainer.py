@@ -22,9 +22,10 @@ class MainWindow(QMainWindow):
 
 
 def numbers():
-    global number1, number2
+    global number1, number2, expectedResult
     number1 = random.randint(0, 20)
     number2 = random.randint(0, 20)
+    expectedResult = number1 * number2
 
 
 app = QApplication([])
