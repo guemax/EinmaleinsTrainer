@@ -75,6 +75,7 @@ class MainWindow(QMainWindow):
         factors, self.product = generate_factors()
         self.first_factor, self.second_factor = factors
         self.ask_question(self.first_factor, self.second_factor)
+        self.answer_widget.setText("")
 
 
 def generate_factors() -> ((int, int), int):
