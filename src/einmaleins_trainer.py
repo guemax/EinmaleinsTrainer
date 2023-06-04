@@ -35,6 +35,9 @@ class MainWindow(QMainWindow):
 
         return widget
 
+    def ask_question(self, first_factor: int, second_factor: int) -> None:
+        self.question_widget.setText(f'Was ist {first_factor} * {second_factor}?')
+
     def __init_answer_widget(self) -> QLineEdit:
         widget = QLineEdit(self)
         widget.setMaxLength(3)
@@ -69,6 +72,9 @@ class MainWindow(QMainWindow):
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
 
+        factors, self.product = generate_factors()
+        self.first_factor, self.second_factor = factors
+        self.ask_question(self.first_factor, self.second_factor)
 
 
 def generate_factors() -> ((int, int), int):
