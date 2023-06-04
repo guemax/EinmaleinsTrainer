@@ -14,9 +14,10 @@ class MainWindow(QMainWindow):
 
         self.question_widget = self.__init_question_widget(self.first_factor, self.second_factor)
         self.answer_widget = self.__init_answer_widget()
+        self.result_widget = self.__init_result_widget()
 
         # Init events
-        self.answer_widget.returnPressed.connect(self.validate_answer)
+        self.answer_widget.returnPressed.connect(self.show_result)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
@@ -48,10 +49,28 @@ class MainWindow(QMainWindow):
 
         return widget
 
+    def __init_result_widget(self) -> QLabel:
+        print("Hallo!")
+        widget = QLabel(self, alignment=Qt.AlignmentFlag.AlignHCenter)
+        widget.setFixedSize(500, 25)
+        widget.move(Qt.AlignmentFlag.AlignHCenter, 140)
 
-    def validate_answer(self):
-        print("Return pressed!")
-        user_result = self.answer_widget.text()
+        font = widget.font()
+        font.setPointSize(15)
+        widget.setFont(font)
+
+        return widget
+
+    def show_result(self) -> None:
+        answer = int(self.answer_widget.text())
+        expected_answer = self.product
+        print(expected_answer)
+
+        if answer == expected_answer:
+            self.result_widget.setText('Das ist richtig!')
+        else:
+            self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
+
 
 
 def generate_factors() -> ((int, int), int):
