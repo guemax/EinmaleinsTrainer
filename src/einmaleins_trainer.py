@@ -9,7 +9,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        generate_factors()
+        factors, product = generate_factors()
+        first_factor, second_factor = factors
 
         question_widget = QLabel(f'Was ist {first_factor} * {second_factor}?', alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         font = question_widget.font()
@@ -38,11 +39,12 @@ class MainWindow(QMainWindow):
         user_result = self.answer_widget.text()
 
 
-def generate_factors():
-    global first_factor, second_factor, product
+def generate_factors() -> ((int, int), int):
     first_factor = random.randint(0, 20)
     second_factor = random.randint(0, 20)
     product = first_factor * second_factor
+
+    return (first_factor, second_factor), product
 
 
 app = QApplication([])
