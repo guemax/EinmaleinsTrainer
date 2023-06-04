@@ -1,7 +1,7 @@
 import random
 
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit
 
 
 class MainWindow(QMainWindow):
@@ -13,6 +13,14 @@ class MainWindow(QMainWindow):
         font = qLabelText.font()
         font.setPointSize(20)
         qLabelText.setFont(font)
+
+        self.input = QLineEdit(self)
+        self.input.setMaxLength(3)
+        self.input.move(225, 75)
+        font = self.input.font()
+        font.setPointSize(15)
+        self.input.setFont(font)
+        self.input.setFixedSize(40, 25)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
