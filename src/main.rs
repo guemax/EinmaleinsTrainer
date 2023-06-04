@@ -2,7 +2,7 @@ use std::io;
 use std::io::Write;
 
 extern crate termion;
-use termion::{color, style};
+use termion::color;
 
 use rand::Rng;
 
@@ -26,9 +26,9 @@ fn fg_red(text: String) -> String{
 
 
 fn align_equation_at_equal_and_multiplication_sign(num_1: u32, num_2: u32, result: u32) -> String {
-    let mut num_1_string: String = "".to_string();
-    let mut num_2_string: String = "".to_string();
-    let mut result_string: String = "".to_string();
+    let num_1_string: String;
+    let num_2_string: String;
+    let result_string: String;
 
     num_1_string = match num_1.to_string().len() {
 	1 => format!(" {num_1}"),
