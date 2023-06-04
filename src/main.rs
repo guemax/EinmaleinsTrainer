@@ -4,6 +4,8 @@ use std::io::Write;
 extern crate termion;
 use termion::{color, style};
 
+use rand::Rng;
+
 
 fn print_after_answer(text: String) {
     println!(
@@ -55,8 +57,8 @@ fn main() {
     let indentation = "    ";
 
     loop {
-	let num_1 = 7;
-	let num_2 = 10;
+	let num_1 = rand::thread_rng().gen_range(1..=10);
+	let num_2 = rand::thread_rng().gen_range(1..=10);
 
 	print!("{}{}", indentation, align_equation_at_equal_and_multiplication_sign(num_1, num_2, num_1 * num_2));
 	std::io::stdout().flush().unwrap();
