@@ -44,3 +44,35 @@ fn format_product_placeholder(product: u32) -> String {
 fn is_double_digit(number: u32) -> bool {
 	number.to_string().len() == 2
 }
+
+
+#[cfg(test)]
+mod tests {
+	use crate::align_equation::{is_double_digit, is_single_digit};
+
+	#[test]
+	fn is_single_digit_returns_true() {
+		for i in 1..=9 {
+			assert_eq!(is_single_digit(i), true);
+		}
+	}
+	#[test]
+	fn is_single_digit_returns_false() {
+		for i in 10..=20 {
+			assert_eq!(is_single_digit(i), false);
+		}
+	}
+
+	#[test]
+	fn is_double_digit_returns_true() {
+		for i in 10..=20 {
+			assert_eq!(is_double_digit(i), true);
+		}
+	}
+	#[test]
+	fn is_double_digit_returns_false() {
+		for i in 1..=9 {
+			assert_eq!(is_double_digit(i), false);
+		}
+	}
+}
