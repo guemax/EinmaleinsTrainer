@@ -2,6 +2,7 @@ import random
 
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit
+from PySide6.QtGui import QIntValidator
 
 
 class MainWindow(QMainWindow):
@@ -21,12 +22,20 @@ class MainWindow(QMainWindow):
         font.setPointSize(15)
         self.input.setFont(font)
         self.input.setFixedSize(40, 25)
+        self.onlyInt = QIntValidator(self)
+        self.input.setValidator(self.onlyInt)
+        self.input.returnPressed.connect(self.return_pressed)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
         self.setFixedSize(QSize(500, 400))
 
         self.setCentralWidget(qLabelText)
+
+    def return_pressed(self):
+        print("Return pressed!")
+        userResult = self.input.text()
+        print(userResult)
 
 
 def numbers():
