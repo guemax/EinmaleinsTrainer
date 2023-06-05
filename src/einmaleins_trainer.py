@@ -50,8 +50,6 @@ class MainWindow(QMainWindow):
         self.exit_widget = self.__init_exit_widget()
         self.highscore_widget = self.__init_highscore_widget()
 
-        self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
-
         # Init events
         self.answer_widget.returnPressed.connect(self.show_results)
         self.answer_widget.returnPressed.connect(self.update_highsscore_widget)
