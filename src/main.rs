@@ -5,31 +5,13 @@ use std::process::exit;
 
 use ctrlc;
 
-extern crate termion;
-use termion::color;
-
 use rand::Rng;
 
 pub mod align_equation;
+mod draw;
+use draw::Color;
+
 use align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
-
-
-fn print_after_answer(text: String) {
-    println!(
-	"{}{}{}{text}",
-	termion::cursor::Up(1), termion::cursor::Right(20),
-	termion::clear::AfterCursor);
-}
-
-
-fn fg_green(text: String) -> String {
-    format!("{}{text}{}", color::Fg(color::Green), color::Fg(color::Reset))
-}
-
-
-fn fg_red(text: String) -> String{
-    format!("{}{text}{}", color::Fg(color::Red), color::Fg(color::Reset))
-}
 
 
 fn generate_numbers() -> (u32, u32) {
@@ -102,7 +84,7 @@ fn game_loop() {
 		let answer = get_answer();
 
 		match answer {
-			Err(_) => print_after_answer(fg_red(format!("✘ (Bitte gib eine Zahl als Antwort ein.) "))),
+			Err(_) => draw::after_answer(format!("✘ (Bitte gib eine Zahl als Antwort ein.) "), Color::Red),
 			Ok(answer) => {
 				if answer.jump == JumpToNewRound::Yes {
 					println!();
@@ -110,10 +92,10 @@ fn game_loop() {
 				}
 				let expected_answer = product;
 				if answer.value == expected_answer {
-					print_after_answer(fg_green("✔".to_string()));
+					draw::after_answer("✔".to_string(), Color::Green);
 				} else {
 					let text = format!("✘ (Richtige Antwort: {})", product);
-					print_after_answer(fg_red(text));
+					draw::after_answer(text, Color::Red);
 				}
 			}
 		}
