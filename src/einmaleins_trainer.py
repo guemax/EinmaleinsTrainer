@@ -21,12 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import random
+import json
 
 from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
 from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase
-
 
 class Color(QWidget):
 
@@ -48,11 +48,13 @@ class MainWindow(QMainWindow):
         self.result_widget = self.__init_result_widget()
         self.score_widget = self.__init_score_widget()
         self.exit_widget = self.__init_exit_widget()
+        self.highscore_widget = self.__init_highscore_widget()
 
         self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
 
         # Init events
         self.answer_widget.returnPressed.connect(self.show_results)
+        self.answer_widget.returnPressed.connect(self.update_highsscore_widget)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
@@ -66,7 +68,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.answer_widget, 1, 0, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(self.result_widget, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.score_widget, 3, 0, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.exit_widget, 5, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.highscore_widget, 5, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.exit_widget, 6, 0, alignment=Qt.AlignmentFlag.AlignCenter)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -78,6 +81,11 @@ class MainWindow(QMainWindow):
 
         self.correct_answer = 0
         self.false_answer = 0
+        self.saved_correct_answer = 0
+        self.saved_false_answer = 0
+
+        self.load_values()
+        self.update_highsscore_widget()
 
         # Ask first question
         self.set_newly_generated_factors_and_product()
@@ -128,6 +136,12 @@ class MainWindow(QMainWindow):
 
         return widget
 
+    def __init_highscore_widget(self) -> QLabel:
+        widget = QLabel(self)
+        widget.setFont(QFont("Arial Rounded MT Bold", 15))
+
+        return widget
+
     def show_results(self) -> None:
         answer = int(self.answer_widget.text())
         expected_answer = self.product
@@ -145,6 +159,37 @@ class MainWindow(QMainWindow):
 
         self.score_widget.setText(f'<font color="#739D00">Richtige Antworten: {self.correct_answer}'
                                   f'</font><br><font color="#FF5159">Falsche Antworten: {self.false_answer}</font>')
+
+    def closeEvent(self, event):
+        # Save the values on application close
+        if self.correct_answer > self.saved_correct_answer:
+            self.save_values()
+        event.accept()
+
+    def load_values(self):
+        try:
+            # Load the values from a JSON file (if available)
+            with open("values.json", "r") as file:
+                data = json.load(file)
+                self.saved_correct_answer = data["correct_answer"]
+        except (FileNotFoundError, json.JSONDecodeError):
+            # If the file doesn't exist or there is an error in reading,
+            # set the values to 0
+            self.saved_correct_answer = 0
+
+    def save_values(self):
+        # Save the values in a JSON file
+        data = {
+            "correct_answer": self.correct_answer,
+        }
+        with open("values.json", "w") as file:
+            json.dump(data, file)
+
+    def update_highsscore_widget(self):
+        # Update the text in the QLabel
+        self.highscore_widget.setText(
+            f"Höchstpunktzahl: {max(self.saved_correct_answer, self.correct_answer)}"
+        )
 
 
 def generate_factors_and_product() -> ((int, int), int):
