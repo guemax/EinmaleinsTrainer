@@ -1,5 +1,4 @@
 use std::io;
-use std::io::Write;
 use std::num::ParseIntError;
 
 use ctrlc;
@@ -30,9 +29,7 @@ fn get_answer() -> Result<Answer, ParseIntError> {
 
 	io::stdin().read_line(&mut answer).expect("Die Anwort konnte nicht gelesen werden.");
 	if let "q" = answer.trim().to_lowercase().as_str() {
-		println!();
-		print!("Wollen Sie das Training wirklich beenden? [j/N] ");
-		io::stdout().flush().unwrap();
+		draw::text("\nWollen Sie das Training wirklich beenden? [j/N] ".to_string(), Color::Yellow);
 
 		let mut answer = String::new();
 		io::stdin().read_line(&mut answer).expect("Die Eingabe konnte nicht gelesen werden.");
@@ -59,7 +56,7 @@ fn game_loop() {
 			Err(_) => draw::after_answer(format!("✘ (Bitte gib eine Zahl als Antwort ein.) "), Color::Red),
 			Ok(answer) => {
 				if answer.jump == JumpToNewRound::Yes {
-					println!();
+					draw::newline();
 					continue;
 				}
 				let expected_answer = problem.product;

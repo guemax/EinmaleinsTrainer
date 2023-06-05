@@ -31,8 +31,20 @@ pub fn question(problem: &Problem) {
 
 
 pub enum Color {
-    Green,
     Red,
+    Yellow,
+    Green,
+}
+
+
+pub fn newline() {
+    println!();
+}
+
+
+pub fn text(text: String, color: Color) {
+    print!("{}", styled(text, color));
+    io::stdout().flush().unwrap();
 }
 
 
@@ -44,7 +56,8 @@ pub fn after_answer(text: String, color: Color) {
 fn styled(text: String, color: Color) -> String {
     let fg_color= match color {
         Color::Red => color::Fg(color::Red).to_string(),
-        Color::Green => color::Fg(color::Green).to_string()
+        Color::Yellow => color::Fg(color::Yellow).to_string(),
+        Color::Green => color::Fg(color::Green).to_string(),
     };
     let reset_color = color::Fg(color::Reset);
     return format!("{}{}{}", fg_color, text, reset_color);
