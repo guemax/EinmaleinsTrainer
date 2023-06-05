@@ -5,8 +5,10 @@ use std::process::exit;
 extern crate termion;
 use termion::{color, cursor, clear};
 
-use crate::Problem;
-use crate::align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
+mod align_equation;
+
+use crate::game::Problem;
+use crate::draw::align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
 
 
 pub fn greeting() {

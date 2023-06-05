@@ -1,4 +1,4 @@
-use crate::Problem;
+use crate::game::Problem;
 
 
 pub fn align_equation_at_equal_sign_and_at_multiplication_sign(problem: &Problem) -> String {
