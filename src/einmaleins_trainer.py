@@ -25,7 +25,7 @@ import random
 from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
-from PySide6.QtGui import QIntValidator, QPalette, QColor
+from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase
 
 
 class Color(QWidget):
@@ -58,6 +58,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Einmaleins Trainer")
         self.setFixedSize(QSize(500, 400))
 
+        QFontDatabase.addApplicationFont("ARLRDBD.TTF")
+
         layout = QGridLayout()
 
         layout.addWidget(self.question_widget, 0, 0, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -84,9 +86,7 @@ class MainWindow(QMainWindow):
     @staticmethod
     def __init_question_widget() -> QLabel:
         widget = QLabel(alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
-        font = widget.font()
-        font.setPointSize(20)
-        widget.setFont(font)
+        widget.setFont(QFont("Arial Rounded MT Bold", 20))
 
         return widget
 
@@ -101,10 +101,7 @@ class MainWindow(QMainWindow):
         widget = QLineEdit(self)
         widget.setMaxLength(3)
         widget.setFixedSize(40, 25)
-
-        font = widget.font()
-        font.setPointSize(15)
-        widget.setFont(font)
+        widget.setFont(QFont("Arial Rounded MT Bold", 15))
 
         widget.setValidator(QIntValidator(self))
 
@@ -112,28 +109,19 @@ class MainWindow(QMainWindow):
 
     def __init_result_widget(self) -> QLabel:
         widget = QLabel(self)
-
-        font = widget.font()
-        font.setPointSize(15)
-        widget.setFont(font)
+        widget.setFont(QFont("Arial Rounded MT Bold", 15))
 
         return widget
 
     def __init_score_widget(self) -> QLabel:
         widget = QLabel(self)
-
-        font = widget.font()
-        font.setPointSize(15)
-        widget.setFont(font)
+        widget.setFont(QFont("Arial Rounded MT Bold", 15))
 
         return widget
 
     def __init_exit_widget(self) -> QPushButton:
         widget = QPushButton("Übung Beenden", self)
-
-        font = widget.font()
-        font.setPointSize(15)
-        widget.setFont(font)
+        widget.setFont(QFont("Arial Rounded MT Bold", 15))
 
         widget.clicked.connect(self.close)
 
