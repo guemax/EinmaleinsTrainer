@@ -5,24 +5,14 @@ use std::process::exit;
 
 use ctrlc;
 
-use rand::Rng;
-
 pub mod align_equation;
 mod draw;
+mod problem;
+
 use draw::Color;
 
 use align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
-
-
-fn generate_numbers() -> (u32, u32) {
-    (rand::thread_rng().gen_range(1..=10), rand::thread_rng().gen_range(1..=10))
-}
-
-
-pub struct Problem {
-	factors: (u32, u32),
-	product: u32
-}
+use crate::problem::{Problem, Difficulty};
 
 
 #[derive(PartialEq)]
@@ -62,11 +52,8 @@ fn get_answer() -> Result<Answer, ParseIntError> {
 
 fn game_loop() {
 	loop {
-		let (first_factor, second_factor) = generate_numbers();
-		let product = first_factor * second_factor;
-
-		let problem = Problem{factors: (first_factor, second_factor), product };
-		draw::question(problem);
+		let problem = Problem::generate(Difficulty::Medium);
+		draw::question(&problem);
 
 		let answer = get_answer();
 
@@ -77,11 +64,11 @@ fn game_loop() {
 					println!();
 					continue;
 				}
-				let expected_answer = product;
+				let expected_answer = problem.product;
 				if answer.value == expected_answer {
 					draw::after_answer("✔".to_string(), Color::Green);
 				} else {
-					let text = format!("✘ (Richtige Antwort: {})", product);
+					let text = format!("✘ (Richtige Antwort: {})", expected_answer);
 					draw::after_answer(text, Color::Red);
 				}
 			}

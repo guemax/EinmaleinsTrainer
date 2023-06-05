@@ -1,7 +1,7 @@
 use crate::Problem;
 
 
-pub fn align_equation_at_equal_sign_and_at_multiplication_sign(problem: Problem) -> String {
+pub fn align_equation_at_equal_sign_and_at_multiplication_sign(problem: &Problem) -> String {
 	// Equation is going to look like this:
 	//     1 ✕ 1  =   1
 	//     1 ✕ 10 =  10

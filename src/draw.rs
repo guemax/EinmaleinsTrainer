@@ -22,10 +22,10 @@ pub fn farewell() {
 }
 
 
-pub fn question(problem: Problem) {
+pub fn question(problem: &Problem) {
     let indentation = " ".repeat(4);
 
-    print!("{}{}", indentation, align_equation_at_equal_sign_and_at_multiplication_sign(problem));
+    print!("{}{}", indentation, align_equation_at_equal_sign_and_at_multiplication_sign(&problem));
 	io::stdout().flush().unwrap();
 }
 
