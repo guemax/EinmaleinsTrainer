@@ -19,11 +19,9 @@ fn generate_numbers() -> (u32, u32) {
 }
 
 
-fn ask_question(first_factor: u32, second_factor: u32, product: u32) {
-	let indentation = "    ";
-
-	print!("{}{}", indentation, align_equation_at_equal_sign_and_at_multiplication_sign(first_factor, second_factor, product));
-	io::stdout().flush().unwrap();
+pub struct Problem {
+	factors: (u32, u32),
+	product: u32
 }
 
 
@@ -51,7 +49,7 @@ fn get_answer() -> Result<Answer, ParseIntError> {
 		let mut answer = String::new();
 		io::stdin().read_line(&mut answer).expect("Die Eingabe konnte nicht gelesen werden.");
 		if "j" == answer.trim().to_lowercase().as_str() {
-			exit_message();
+			draw::farewell();
 		} else if "n" == answer.trim().to_lowercase().as_str() {
 			return Ok(Answer { jump: JumpToNewRound::Yes, value: 0 });
 		}
@@ -67,7 +65,9 @@ fn game_loop() {
 		let (first_factor, second_factor) = generate_numbers();
 		let product = first_factor * second_factor;
 
-		ask_question(first_factor, second_factor, product);
+		let problem = Problem{factors: (first_factor, second_factor), product };
+		draw::question(problem);
+
 		let answer = get_answer();
 
 		match answer {
@@ -94,7 +94,7 @@ fn game_loop() {
 fn main() {
 	ctrlc::set_handler(move || {
 		println!();
-		exit_message();
+		draw::farewell();
 	}).expect("Ctrl+C Eventhandler konnte nicht eingerichtet werden.");
 
 	draw::greeting();

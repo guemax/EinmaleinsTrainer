@@ -1,7 +1,12 @@
+use std::io;
+use std::io::Write;
 use std::process::exit;
 
 extern crate termion;
 use termion::{color, cursor, clear};
+
+use crate::Problem;
+use crate::align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
 
 
 pub fn greeting() {
@@ -14,6 +19,14 @@ pub fn farewell() {
     println!("\nSie haben 9 von 10 Fragen richtig beanwortet. Dies entspricht einer Erfolgsrate von 90%.");
     println!("Herzlichen Glückwunsch!");
 	exit(0);
+}
+
+
+pub fn question(problem: Problem) {
+    let indentation = " ".repeat(4);
+
+    print!("{}{}", indentation, align_equation_at_equal_sign_and_at_multiplication_sign(problem));
+	io::stdout().flush().unwrap();
 }
 
 
