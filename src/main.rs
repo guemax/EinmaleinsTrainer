@@ -1,6 +1,4 @@
-use std::io;
-use std::num::ParseIntError;
-
+use std::{io, num::ParseIntError};
 use ctrlc;
 
 pub mod align_equation;
@@ -8,8 +6,7 @@ mod draw;
 mod problem;
 
 use draw::Color;
-
-use crate::problem::{Problem, Difficulty};
+use problem::{Problem, Difficulty};
 
 
 #[derive(PartialEq)]
