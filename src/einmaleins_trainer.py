@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
         widget.setMaxLength(3)
         widget.setFixedSize(40, 25)
         widget.setFont(QFont("Arial Rounded MT Bold", 15))
+        widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         widget.setValidator(QIntValidator(self))
 
