@@ -143,7 +143,8 @@ class MainWindow(QMainWindow):
         self.ask_question(self.first_factor, self.second_factor)
         self.answer_widget.setText("")
 
-        self.score_widget.setText(f'Richtige Antworten: {self.correct_answer}\nFalsche Antworten: {self.false_answer}')
+        self.score_widget.setText(f'<font color="#739D00">Richtige Antworten: {self.correct_answer}'
+                                  f'</font><br><font color="#FF5159">Falsche Antworten: {self.false_answer}</font>')
 
 
 def generate_factors_and_product() -> ((int, int), int):
