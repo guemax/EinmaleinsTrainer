@@ -22,8 +22,9 @@ SOFTWARE.
 """
 import random
 
+from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
 from PySide6.QtGui import QIntValidator, QPalette, QColor
 
 
@@ -46,6 +47,9 @@ class MainWindow(QMainWindow):
         self.answer_widget = self.__init_answer_widget()
         self.result_widget = self.__init_result_widget()
         self.score_widget = self.__init_score_widget()
+        self.exit_widget = self.__init_exit_widget()
+
+        self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
 
         # Init events
         self.answer_widget.returnPressed.connect(self.show_results)
@@ -60,7 +64,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.answer_widget, 1, 0, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(self.result_widget, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.score_widget, 3, 0, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(Color('orange'), 5, 0)
+        layout.addWidget(self.exit_widget, 5, 0, alignment=Qt.AlignmentFlag.AlignCenter)
 
         widget = QWidget()
         widget.setLayout(layout)
@@ -121,6 +125,17 @@ class MainWindow(QMainWindow):
         font = widget.font()
         font.setPointSize(15)
         widget.setFont(font)
+
+        return widget
+
+    def __init_exit_widget(self) -> QPushButton:
+        widget = QPushButton("Übung Beenden", self)
+
+        font = widget.font()
+        font.setPointSize(15)
+        widget.setFont(font)
+
+        widget.clicked.connect(self.close)
 
         return widget
 
