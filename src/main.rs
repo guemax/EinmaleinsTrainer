@@ -1,6 +1,9 @@
 use std::io;
 use std::io::Write;
 use std::num::ParseIntError;
+use std::process::exit;
+
+use ctrlc;
 
 extern crate termion;
 use termion::color;
@@ -9,6 +12,7 @@ use rand::Rng;
 
 pub mod align_equation;
 use align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
+
 
 fn print_after_answer(text: String) {
     println!(
@@ -35,13 +39,14 @@ fn generate_numbers() -> (u32, u32) {
 
 fn start_up_message() {
 	println!("Dies ist der Einmaleins-Trainer v{}.", env!("CARGO_PKG_VERSION"));
-    println!("Das Training wird nun gestartet. (Drücken Sie Ctrl+C zum Beenden.)\n");
+    println!("Das Training wird nun gestartet. (Drücken Sie q zum Beenden.)\n");
 }
 
 
 fn exit_message() {
     println!("\nSie haben 9 von 10 Fragen richtig beanwortet. Dies entspricht einer Erfolgsrate von 90%.");
     println!("Herzlichen Glückwunsch!");
+	exit(0);
 }
 
 
@@ -53,19 +58,43 @@ fn ask_question(first_factor: u32, second_factor: u32, product: u32) {
 }
 
 
-fn get_answer() -> Result<u32, ParseIntError> {
-	let mut answer = String::new();
+#[derive(PartialEq)]
+enum JumpToNewRound {
+	Yes,
+	No
+}
 
-	io::stdin().read_line(&mut answer).expect("Die Anwort konnte nicht gelesen werden.");
-	let answer: u32 = answer.trim().parse()?;
-	return Ok(answer);
+struct Answer {
+	jump: JumpToNewRound,
+	value: u32
 }
 
 
-fn main() {
-    start_up_message();
+fn get_answer() -> Result<Answer, ParseIntError> {
+	let mut answer = String::new();
 
-    loop {
+	io::stdin().read_line(&mut answer).expect("Die Anwort konnte nicht gelesen werden.");
+	if let "q" = answer.trim().to_lowercase().as_str() {
+		println!();
+		print!("Wollen Sie das Training wirklich beenden? [j/N] ");
+		io::stdout().flush().unwrap();
+
+		let mut answer = String::new();
+		io::stdin().read_line(&mut answer).expect("Die Eingabe konnte nicht gelesen werden.");
+		if "j" == answer.trim().to_lowercase().as_str() {
+			exit_message();
+		} else if "n" == answer.trim().to_lowercase().as_str() {
+			return Ok(Answer { jump: JumpToNewRound::Yes, value: 0 });
+		}
+	}
+
+	let answer: u32 = answer.trim().parse()?;
+	return Ok(Answer{ jump: JumpToNewRound::No, value: answer});
+}
+
+
+fn game_loop() {
+	loop {
 		let (first_factor, second_factor) = generate_numbers();
 		let product = first_factor * second_factor;
 
@@ -73,10 +102,14 @@ fn main() {
 		let answer = get_answer();
 
 		match answer {
-			Err(_) => print_after_answer(fg_red(format!("✘ Bitte gib eine Zahl als Antwort ein."))),
+			Err(_) => print_after_answer(fg_red(format!("✘ (Bitte gib eine Zahl als Antwort ein.) "))),
 			Ok(answer) => {
+				if answer.jump == JumpToNewRound::Yes {
+					println!();
+					continue;
+				}
 				let expected_answer = product;
-				if answer == expected_answer {
+				if answer.value == expected_answer {
 					print_after_answer(fg_green("✔".to_string()));
 				} else {
 					let text = format!("✘ (Richtige Antwort: {})", product);
@@ -86,6 +119,16 @@ fn main() {
 		}
     }
 
-    println!("\nWollen sie das Training wirklich beenden? [j/N]");
+}
+
+
+fn main() {
+	ctrlc::set_handler(move || {
+		println!();
+		exit_message();
+	}).expect("Ctrl+C Eventhandler konnte nicht eingerichtet werden.");
+
+	start_up_message();
+	game_loop();
 	exit_message();
 }

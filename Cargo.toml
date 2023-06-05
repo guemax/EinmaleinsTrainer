@@ -13,3 +13,4 @@ path = "src/main.rs"
 [dependencies]
 termion = "2.0.1"
 rand = "0.8.5"
+ctrlc = "3.4.0"
