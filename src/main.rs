@@ -1,7 +1,6 @@
 use std::io;
 use std::io::Write;
 use std::num::ParseIntError;
-use std::process::exit;
 
 use ctrlc;
 
@@ -11,7 +10,6 @@ mod problem;
 
 use draw::Color;
 
-use align_equation::align_equation_at_equal_sign_and_at_multiplication_sign;
 use crate::problem::{Problem, Difficulty};
 
 
