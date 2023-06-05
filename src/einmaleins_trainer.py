@@ -26,7 +26,7 @@ import json
 from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
-from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase
+from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon
 
 class Color(QWidget):
 
@@ -42,6 +42,8 @@ class Color(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.setWindowIcon(QIcon('icon.png'))
 
         self.question_widget = self.__init_question_widget()
         self.answer_widget = self.__init_answer_widget()
@@ -106,11 +108,26 @@ class MainWindow(QMainWindow):
     def __init_answer_widget(self) -> QLineEdit:
         widget = QLineEdit(self)
         widget.setMaxLength(3)
-        widget.setFixedSize(40, 25)
+        widget.setFixedSize(55, 30)
         widget.setFont(QFont("Arial Rounded MT Bold", 15))
         widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         widget.setValidator(QIntValidator(self))
+
+        widget.setStyleSheet("QLineEdit {"
+                             "background-color: #46515B;"
+                             "color: #FFEAEE;"
+                             "border-style: outset;"
+                             "border-width: 3px;"
+                             "border-radius: 10px;"
+                             "padding: 5px;"
+                             "selection-background-color: #FFEAEE;"
+                             "selection-color: #798897;"
+                             "}"
+                             "QLineEdit:focus {"
+                             "border: 2px solid #FFEAEE;"
+                             "}"
+                             )
 
         return widget
 
@@ -129,6 +146,21 @@ class MainWindow(QMainWindow):
     def __init_exit_widget(self) -> QPushButton:
         widget = QPushButton("Übung Beenden", self)
         widget.setFont(QFont("Arial Rounded MT Bold", 15))
+        widget.setStyleSheet("QPushButton {"
+                             "background-color: #46515B;"
+                             "color: #FFEAEE;"
+                             "border-style: outset;"
+                             "border-width: 3px;"
+                             "border-radius: 10px;"
+                             "padding: 5px;"
+                             "}"
+                             "QPushButton:hover {"
+                             "background-color: #2D353B;"
+                             "}"
+                             "QPushButton:pressed {"
+                             "background-color: #181C20;"
+                             "}"
+                             )
 
         widget.clicked.connect(self.close)
 
@@ -155,7 +187,7 @@ class MainWindow(QMainWindow):
         self.ask_question(self.first_factor, self.second_factor)
         self.answer_widget.setText("")
 
-        self.score_widget.setText(f'<font color="#739D00">Richtige Antworten: {self.correct_answer}'
+        self.score_widget.setText(f'<font color="#A7ED90">Richtige Antworten: {self.correct_answer}'
                                   f'</font><br><font color="#FF5159">Falsche Antworten: {self.false_answer}</font>')
 
     def closeEvent(self, event):
@@ -199,6 +231,26 @@ def generate_factors_and_product() -> ((int, int), int):
 
 
 app = QApplication([])
+
+# Set global stylesheet
+app.setStyleSheet(
+    "QMainWindow {"
+    "background-color: #798897;"
+    "}"
+    "QLabel {"
+    "color: #FFEAEE;"
+    "}"
+    "QLineEdit {"
+    "background-color: #798897;"
+    "color: #FFEAEE;"
+    "border-radius: 25px;"
+    "padding: 5px;"
+    "}"
+    "QLineEdit:focus {"
+    "border: 1px solid #FFEAEE;"
+    "color: #FFEAEE;"
+    "}"
+)
 
 # Create the window
 window = MainWindow()
