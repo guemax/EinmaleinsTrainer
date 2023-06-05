@@ -23,8 +23,19 @@ SOFTWARE.
 import random
 
 from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit
-from PySide6.QtGui import QIntValidator
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout
+from PySide6.QtGui import QIntValidator, QPalette, QColor
+
+
+class Color(QWidget):
+
+    def __init__(self, color):
+        super(Color, self).__init__()
+        self.setAutoFillBackground(True)
+
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor(color))
+        self.setPalette(palette)
 
 
 class MainWindow(QMainWindow):
@@ -43,7 +54,17 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Einmaleins Trainer")
         self.setFixedSize(QSize(500, 400))
 
-        self.setCentralWidget(self.question_widget)
+        layout = QGridLayout()
+
+        layout.addWidget(self.question_widget, 0, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.answer_widget, 1, 0, alignment=Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self.result_widget, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.score_widget, 3, 0, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(Color('orange'), 5, 0)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
 
         self.first_factor = 0
         self.second_factor = 0
@@ -75,7 +96,6 @@ class MainWindow(QMainWindow):
     def __init_answer_widget(self) -> QLineEdit:
         widget = QLineEdit(self)
         widget.setMaxLength(3)
-        widget.move(225, 75)
         widget.setFixedSize(40, 25)
 
         font = widget.font()
@@ -87,9 +107,7 @@ class MainWindow(QMainWindow):
         return widget
 
     def __init_result_widget(self) -> QLabel:
-        widget = QLabel(self, alignment=Qt.AlignmentFlag.AlignHCenter)
-        widget.setFixedSize(500, 25)
-        widget.move(Qt.AlignmentFlag.AlignHCenter, 140)
+        widget = QLabel(self)
 
         font = widget.font()
         font.setPointSize(15)
@@ -98,9 +116,7 @@ class MainWindow(QMainWindow):
         return widget
 
     def __init_score_widget(self) -> QLabel:
-        widget = QLabel(self, alignment=Qt.AlignmentFlag.AlignHCenter)
-        widget.setFixedSize(500, 60)
-        widget.move(Qt.AlignmentFlag.AlignHCenter, 200)
+        widget = QLabel(self)
 
         font = widget.font()
         font.setPointSize(15)
