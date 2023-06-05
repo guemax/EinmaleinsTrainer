@@ -19,19 +19,6 @@ fn generate_numbers() -> (u32, u32) {
 }
 
 
-fn start_up_message() {
-	println!("Dies ist der Einmaleins-Trainer v{}.", env!("CARGO_PKG_VERSION"));
-    println!("Das Training wird nun gestartet. (Drücken Sie q zum Beenden.)\n");
-}
-
-
-fn exit_message() {
-    println!("\nSie haben 9 von 10 Fragen richtig beanwortet. Dies entspricht einer Erfolgsrate von 90%.");
-    println!("Herzlichen Glückwunsch!");
-	exit(0);
-}
-
-
 fn ask_question(first_factor: u32, second_factor: u32, product: u32) {
 	let indentation = "    ";
 
@@ -110,7 +97,7 @@ fn main() {
 		exit_message();
 	}).expect("Ctrl+C Eventhandler konnte nicht eingerichtet werden.");
 
-	start_up_message();
+	draw::greeting();
 	game_loop();
-	exit_message();
+	draw::farewell();
 }

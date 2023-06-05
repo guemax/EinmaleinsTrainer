@@ -1,5 +1,20 @@
+use std::process::exit;
+
 extern crate termion;
 use termion::{color, cursor, clear};
+
+
+pub fn greeting() {
+	println!("Dies ist der Einmaleins-Trainer v{}.", env!("CARGO_PKG_VERSION"));
+    println!("Das Training wird nun gestartet. (Drücken Sie q zum Beenden.)\n");
+}
+
+
+pub fn farewell() {
+    println!("\nSie haben 9 von 10 Fragen richtig beanwortet. Dies entspricht einer Erfolgsrate von 90%.");
+    println!("Herzlichen Glückwunsch!");
+	exit(0);
+}
 
 
 pub enum Color {
