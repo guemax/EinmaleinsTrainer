@@ -22,11 +22,22 @@ SOFTWARE.
 """
 import random
 import json
+import os
 
 from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
 from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon
+
+basedir = os.path.dirname(__file__)
+print(os.path.join(basedir, 'appico.ico'))
+
+try:
+    from ctypes import windll  # Only exists on Windows.
+    myappid = 'com.PingTech.EinmaleinsTrainer.0.1'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 class Color(QWidget):
 
@@ -42,8 +53,6 @@ class Color(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
-        self.setWindowIcon(QIcon('icon.png'))
 
         self.question_widget = self.__init_question_widget()
         self.answer_widget = self.__init_answer_widget()
@@ -231,7 +240,7 @@ def generate_factors_and_product() -> ((int, int), int):
 
 
 app = QApplication([])
-
+app.setWindowIcon(QIcon(os.path.join(basedir, 'appico.ico')))
 # Set global stylesheet
 app.setStyleSheet(
     "QMainWindow {"
