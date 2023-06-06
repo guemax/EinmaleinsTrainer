@@ -30,7 +30,6 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWid
 from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon
 
 basedir = os.path.dirname(__file__)
-print(os.path.join(basedir, 'appico.ico'))
 
 try:
     from ctypes import windll  # Only exists on Windows.
@@ -240,7 +239,7 @@ def generate_factors_and_product() -> ((int, int), int):
 
 
 app = QApplication([])
-app.setWindowIcon(QIcon(os.path.join(basedir, 'appico.ico')))
+app.setWindowIcon(QIcon(os.path.join(basedir, 'extra', 'appico.ico')))
 # Set global stylesheet
 app.setStyleSheet(
     "QMainWindow {"
