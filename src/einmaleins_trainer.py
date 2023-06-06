@@ -25,9 +25,10 @@ import json
 import os
 
 from PySide6 import QtCore
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
 from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon
+from PySide6.QtMultimedia import QSoundEffect
 
 basedir = os.path.dirname(__file__)
 
@@ -52,6 +53,17 @@ class Color(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.correct_answer_sound = "extra/correct_answer.wav"
+        self.false_answer_sound = "extra/false_answer.wav"
+
+        self.sound_effect_one = QSoundEffect()
+        self.sound_effect_two = QSoundEffect()
+
+        self.sound_effect_one.setSource(QUrl.fromLocalFile(self.correct_answer_sound))
+        self.sound_effect_two.setSource(QUrl.fromLocalFile(self.false_answer_sound))
+        self.sound_effect_one.setLoopCount(0)
+        self.sound_effect_two.setLoopCount(0)
 
         self.question_widget = self.__init_question_widget()
         self.answer_widget = self.__init_answer_widget()
@@ -187,10 +199,12 @@ class MainWindow(QMainWindow):
         if answer == expected_answer:
             self.result_widget.setText('Das ist richtig!')
             self.correct_answer += 1
+            self.sound_effect_one.play()
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
             self.false_answer += 1
             self.correct_answer = 0
+            self.sound_effect_two.play()
 
         self.set_newly_generated_factors_and_product()
         self.ask_question(self.first_factor, self.second_factor)
