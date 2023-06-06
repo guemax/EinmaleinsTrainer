@@ -74,7 +74,7 @@ class MainWindow(QMainWindow):
 
         # Init events
         self.answer_widget.returnPressed.connect(self.show_results)
-        self.answer_widget.returnPressed.connect(self.update_highsscore_widget)
+        self.answer_widget.returnPressed.connect(self.update_highscore_widget)
 
         # Set the window's name and size
         self.setWindowTitle("Einmaleins Trainer")
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
         # self.saved_false_answer = 0
 
         self.load_values()
-        self.update_highsscore_widget()
+        self.update_highscore_widget()
 
         # Ask first question
         self.set_newly_generated_factors_and_product()
@@ -237,7 +237,7 @@ class MainWindow(QMainWindow):
         with open("values.json", "w") as file:
             json.dump(data, file)
 
-    def update_highsscore_widget(self):
+    def update_highscore_widget(self):
         # Update the text in the QLabel
         # if self.correct_answer > self.saved_correct_answer:
         self.highscore_widget.setText(
