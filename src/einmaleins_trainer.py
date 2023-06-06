@@ -101,8 +101,8 @@ class MainWindow(QMainWindow):
 
         self.correct_answer = 0
         self.false_answer = 0
-        self.saved_correct_answer = 0
-        self.saved_false_answer = 0
+        # self.saved_correct_answer = 0
+        # self.saved_false_answer = 0
 
         self.load_values()
         self.update_highsscore_widget()
@@ -203,7 +203,6 @@ class MainWindow(QMainWindow):
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
             self.false_answer += 1
-            self.correct_answer = 0
             self.sound_effect_two.play()
 
         self.set_newly_generated_factors_and_product()
@@ -240,8 +239,10 @@ class MainWindow(QMainWindow):
 
     def update_highsscore_widget(self):
         # Update the text in the QLabel
+        # if self.correct_answer > self.saved_correct_answer:
         self.highscore_widget.setText(
             f"Höchstpunktzahl: {max(self.saved_correct_answer, self.correct_answer)}"
+            # f"Höchstpunktzahl: {self.saved_correct_answer}"
         )
 
 
