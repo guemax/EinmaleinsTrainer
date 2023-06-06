@@ -190,6 +190,7 @@ class MainWindow(QMainWindow):
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
             self.false_answer += 1
+            self.correct_answer = 0
 
         self.set_newly_generated_factors_and_product()
         self.ask_question(self.first_factor, self.second_factor)
