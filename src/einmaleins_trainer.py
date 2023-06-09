@@ -44,6 +44,7 @@ try:
 except ImportError:
     pass
 
+
 class Color(QWidget):
 
     def __init__(self, color):
@@ -208,6 +209,7 @@ class MainWindow(QMainWindow):
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
             self.false_answer += 1
+            self.correct_answer = max(self.correct_answer - 1, 0)
             self.sound_effect_two.play()
 
         self.set_newly_generated_factors_and_product()
@@ -244,11 +246,9 @@ class MainWindow(QMainWindow):
 
     def update_highscore_widget(self):
         # Update the text in the QLabel
-        # if self.correct_answer > self.saved_correct_answer:
-        self.highscore_widget.setText(
-            f"Höchstpunktzahl: {max(self.saved_correct_answer, self.correct_answer)}"
-            # f"Höchstpunktzahl: {self.saved_correct_answer}"
-        )
+        if self.correct_answer > self.saved_correct_answer:
+            self.saved_correct_answer = self.correct_answer
+        self.highscore_widget.setText(f"Höchstpunktzahl: {self.saved_correct_answer}")
 
 
 def generate_factors_and_product() -> ((int, int), int):
