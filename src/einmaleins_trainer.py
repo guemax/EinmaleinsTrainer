@@ -23,6 +23,7 @@ SOFTWARE.
 import random
 import json
 import os
+import platformdirs
 
 from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt, QUrl
@@ -31,6 +32,10 @@ from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase,
 from PySide6.QtMultimedia import QSoundEffect
 
 basedir = os.path.dirname(__file__)
+
+appname = "Einmaleins Trainer"
+appauthor = "PingTech"
+values_path = platformdirs.user_data_dir(appname, appauthor, roaming=True, ensure_exists=True)
 
 try:
     from ctypes import windll  # Only exists on Windows.
@@ -221,7 +226,7 @@ class MainWindow(QMainWindow):
     def load_values(self):
         try:
             # Load the values from a JSON file (if available)
-            with open("values.json", "r") as file:
+            with open(os.path.join(values_path, 'values.json'), "r") as file:
                 data = json.load(file)
                 self.saved_correct_answer = data["correct_answer"]
         except (FileNotFoundError, json.JSONDecodeError):
@@ -234,7 +239,7 @@ class MainWindow(QMainWindow):
         data = {
             "correct_answer": self.correct_answer,
         }
-        with open("values.json", "w") as file:
+        with open(os.path.join(values_path, 'values.json'), "w") as file:
             json.dump(data, file)
 
     def update_highscore_widget(self):
