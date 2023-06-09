@@ -248,6 +248,7 @@ class MainWindow(QMainWindow):
         # Update the text in the QLabel
         if self.correct_answer > self.saved_correct_answer:
             self.saved_correct_answer = self.correct_answer
+            self.save_values()
         self.highscore_widget.setText(f"Höchstpunktzahl: {self.saved_correct_answer}")
 
 
