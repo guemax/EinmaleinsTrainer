@@ -25,10 +25,9 @@ import json
 import os
 import platformdirs
 
-from PySide6 import QtCore
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
-from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon
+from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon, QAction
 from PySide6.QtMultimedia import QSoundEffect
 
 basedir = os.path.dirname(__file__)
@@ -101,6 +100,16 @@ class MainWindow(QMainWindow):
         widget.setLayout(layout)
         self.setCentralWidget(widget)
 
+        self.button_set_sound = QAction("Ton", self)
+        self.button_set_sound.triggered.connect(self.on_button_set_sound_click)
+        self.button_set_sound.setCheckable(True)
+        self.button_set_sound.setChecked(True)
+
+        menu = self.menuBar()
+
+        file_menu = menu.addMenu("&Einstellungen")
+        file_menu.addAction(self.button_set_sound)
+
         self.first_factor = 0
         self.second_factor = 0
         self.product = 0
@@ -110,12 +119,20 @@ class MainWindow(QMainWindow):
         # self.saved_correct_answer = 0
         # self.saved_false_answer = 0
 
+        self.sound_status = True
+
         self.load_values()
         self.update_highscore_widget()
 
         # Ask first question
         self.set_newly_generated_factors_and_product()
         self.ask_question(self.first_factor, self.second_factor)
+
+    def on_button_set_sound_click(self) -> None:
+        if self.button_set_sound.isChecked():
+            self.sound_status = True
+        else:
+            self.sound_status = False
 
     @staticmethod
     def __init_question_widget() -> QLabel:
@@ -205,12 +222,14 @@ class MainWindow(QMainWindow):
         if answer == expected_answer:
             self.result_widget.setText('Das ist richtig!')
             self.correct_answer += 1
-            self.sound_effect_one.play()
+            if self.sound_status:
+                self.sound_effect_one.play()
         else:
             self.result_widget.setText(f'Die richtige Antwort wäre {expected_answer} gewesen.')
             self.false_answer += 1
             self.correct_answer = max(self.correct_answer - 1, 0)
-            self.sound_effect_two.play()
+            if self.sound_status:
+                self.sound_effect_two.play()
 
         self.set_newly_generated_factors_and_product()
         self.ask_question(self.first_factor, self.second_factor)
