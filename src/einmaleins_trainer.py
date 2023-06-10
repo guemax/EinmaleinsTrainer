@@ -26,7 +26,8 @@ import os
 import platformdirs
 
 from PySide6.QtCore import QSize, Qt, QUrl
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton, QDialog,\
+    QDialogButtonBox
 from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon, QAction
 from PySide6.QtMultimedia import QSoundEffect
 
@@ -53,6 +54,62 @@ class Color(QWidget):
         palette = self.palette()
         palette.setColor(QPalette.Window, QColor(color))
         self.setPalette(palette)
+
+
+class ResetHighscoreDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        QFontDatabase.addApplicationFont("ARLRDBD.TTF")
+
+        self.setWindowTitle("Zurücksetzen bestätigen")
+
+        self.buttons = QDialogButtonBox.Yes | QDialogButtonBox.No
+
+        self.buttonBox = QDialogButtonBox(self.buttons)
+        self.buttonBox.setStyleSheet(
+            "QPushButton {"
+            "background-color: #46515B;"
+            "color: #FFEAEE;"
+            "border-style: outset;"
+            "border-width: 3px;"
+            "border-radius: 10px;"
+            "padding: 5px;"
+            "}"
+            "QPushButton:hover {"
+            "background-color: #2D353B;"
+            "}"
+            "QPushButton:pressed {"
+            "background-color: #181C20;"
+            "}"
+        )
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.dialog_question_widget = self.__init_dialog_question_widget()
+
+        layout = QGridLayout()
+
+        layout.addWidget(self.dialog_question_widget, 0, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.buttonBox, 2, 0, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.setLayout(layout)
+
+        self.setStyleSheet(
+            "QDialog {"
+            "background-color: #798897;"
+            "}"
+            "QLabel {"
+            "color: #FFEAEE;"
+            "}"
+        )
+
+    @staticmethod
+    def __init_dialog_question_widget() -> QLabel:
+        widget = QLabel("Sind Sie sich sicher,dass Sie die Höchstpunktzahl\nzurücksetzen möchten? Dabei geht auch Ihr\n\
+jetziger Spielstand verloren!")
+        widget.setFont(QFont("Arial Rounded MT Bold", 10))
+
+        return widget
 
 
 class MainWindow(QMainWindow):
@@ -105,10 +162,14 @@ class MainWindow(QMainWindow):
         self.button_set_sound.setCheckable(True)
         self.button_set_sound.setChecked(True)
 
+        self.button_reset_highscore = QAction("Höchstpunktzahl zurücksetzen", self)
+        self.button_reset_highscore.triggered.connect(self.on_button_reset_highscore_click)
+
         menu = self.menuBar()
 
         file_menu = menu.addMenu("&Einstellungen")
         file_menu.addAction(self.button_set_sound)
+        file_menu.addAction(self.button_reset_highscore)
 
         self.first_factor = 0
         self.second_factor = 0
@@ -133,6 +194,17 @@ class MainWindow(QMainWindow):
             self.sound_status = True
         else:
             self.sound_status = False
+
+    def on_button_reset_highscore_click(self) -> None:
+        dialog = ResetHighscoreDialog(self)
+        if dialog.exec():
+            self.correct_answer = 0
+            self.false_answer = 0
+            self.save_values()
+            self.load_values()
+            self.update_highscore_widget()
+        else:
+            pass
 
     @staticmethod
     def __init_question_widget() -> QLabel:
