@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
         widget.setLayout(layout)
         self.setCentralWidget(widget)
 
-        self.button_set_sound = QAction("Ton", self)
+        self.button_set_sound = QAction(QIcon("extra/sound_on.ico"), "Ton", self)
         self.button_set_sound.triggered.connect(self.on_button_set_sound_click)
         self.button_set_sound.setCheckable(True)
         self.button_set_sound.setChecked(True)
