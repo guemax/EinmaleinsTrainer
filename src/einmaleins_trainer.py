@@ -203,6 +203,7 @@ class MainWindow(QMainWindow):
             self.save_values()
             self.load_values()
             self.update_highscore_widget()
+            self.update_score_widget()
         else:
             pass
 
@@ -341,6 +342,10 @@ class MainWindow(QMainWindow):
             self.saved_correct_answer = self.correct_answer
             self.save_values()
         self.highscore_widget.setText(f"Höchstpunktzahl: {self.saved_correct_answer}")
+
+    def update_score_widget(self):
+        self.score_widget.setText(f'<font color="#A7ED90">Richtige Antworten: {self.correct_answer}'
+                                  f'</font><br><font color="#FF5159">Falsche Antworten: {self.false_answer}</font>')
 
 
 def generate_factors_and_product() -> ((int, int), int):
