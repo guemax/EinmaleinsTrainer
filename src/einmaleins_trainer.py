@@ -205,8 +205,6 @@ class MainWindow(QMainWindow):
 
         self.correct_answer = 0
         self.false_answer = 0
-        # self.saved_correct_answer = 0
-        # self.saved_false_answer = 0
 
         self.difficulty_easy = False
         self.difficulty_medium = False
