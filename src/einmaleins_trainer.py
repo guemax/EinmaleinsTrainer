@@ -27,8 +27,8 @@ import platformdirs
 
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton, QDialog,\
-    QDialogButtonBox
-from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon, QAction
+    QDialogButtonBox, QFormLayout, QVBoxLayout, QCheckBox
+from PySide6.QtGui import QIntValidator, QPalette, QColor, QFont, QFontDatabase, QIcon, QAction, QActionGroup
 from PySide6.QtMultimedia import QSoundEffect
 
 basedir = os.path.dirname(__file__)
@@ -111,7 +111,6 @@ jetziger Spielstand verloren!")
 
         return widget
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -165,11 +164,40 @@ class MainWindow(QMainWindow):
         self.button_reset_highscore = QAction("Höchstpunktzahl zurücksetzen", self)
         self.button_reset_highscore.triggered.connect(self.on_button_reset_highscore_click)
 
+        self.button_set_difficulty_easy = QAction("Leicht", self)
+        self.button_set_difficulty_easy.triggered.connect(self.on_button_set_difficulty_easy_click)
+        self.button_set_difficulty_easy.setCheckable(True)
+
+        self.button_set_difficulty_medium = QAction("Mittel", self)
+        self.button_set_difficulty_medium.triggered.connect(self.on_button_set_difficulty_medium_click)
+        self.button_set_difficulty_medium.setCheckable(True)
+
+        self.button_set_difficulty_hard = QAction("Schwer", self)
+        self.button_set_difficulty_hard.triggered.connect(self.on_button_set_difficulty_hard_click)
+        self.button_set_difficulty_hard.setCheckable(True)
+
+        self.button_set_difficulty_default = QAction("Standard", self)
+        self.button_set_difficulty_default.triggered.connect(self.on_button_set_difficulty_default_click)
+        self.button_set_difficulty_default.setCheckable(True)
+        self.button_set_difficulty_default.setChecked(True)
+
         menu = self.menuBar()
 
         file_menu = menu.addMenu("&Einstellungen")
         file_menu.addAction(self.button_set_sound)
         file_menu.addAction(self.button_reset_highscore)
+
+        file_submenu = file_menu.addMenu("Schwierigkeitsgrad ändern")
+        file_submenu.addAction(self.button_set_difficulty_easy)
+        file_submenu.addAction(self.button_set_difficulty_medium)
+        file_submenu.addAction(self.button_set_difficulty_hard)
+        file_submenu.addAction(self.button_set_difficulty_default)
+
+        self.button_set_difficulty = QActionGroup(self)
+        self.button_set_difficulty.addAction(self.button_set_difficulty_easy)
+        self.button_set_difficulty.addAction(self.button_set_difficulty_medium)
+        self.button_set_difficulty.addAction(self.button_set_difficulty_hard)
+        self.button_set_difficulty.addAction(self.button_set_difficulty_default)
 
         self.first_factor = 0
         self.second_factor = 0
@@ -179,6 +207,11 @@ class MainWindow(QMainWindow):
         self.false_answer = 0
         # self.saved_correct_answer = 0
         # self.saved_false_answer = 0
+
+        self.difficulty_easy = False
+        self.difficulty_medium = False
+        self.difficulty_hard = False
+        self.difficulty_default = True
 
         self.sound_status = True
 
@@ -207,6 +240,22 @@ class MainWindow(QMainWindow):
         else:
             pass
 
+    def on_button_set_difficulty_easy_click(self) -> None:
+        self.set_newly_generated_factors_and_product()
+        self.ask_question(self.first_factor, self.second_factor)
+
+    def on_button_set_difficulty_medium_click(self) -> None:
+        self.set_newly_generated_factors_and_product()
+        self.ask_question(self.first_factor, self.second_factor)
+
+    def on_button_set_difficulty_hard_click(self) -> None:
+        self.set_newly_generated_factors_and_product()
+        self.ask_question(self.first_factor, self.second_factor)
+
+    def on_button_set_difficulty_default_click(self) -> None:
+        self.set_newly_generated_factors_and_product()
+        self.ask_question(self.first_factor, self.second_factor)
+
     @staticmethod
     def __init_question_widget() -> QLabel:
         widget = QLabel(alignment=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
@@ -218,7 +267,7 @@ class MainWindow(QMainWindow):
         self.question_widget.setText(f'Was ist {first_factor} * {second_factor}?')
 
     def set_newly_generated_factors_and_product(self) -> None:
-        factors, self.product = generate_factors_and_product()
+        factors, self.product = self.generate_factors_and_product()
         self.first_factor, self.second_factor = factors
 
     def __init_answer_widget(self) -> QLineEdit:
@@ -347,13 +396,29 @@ class MainWindow(QMainWindow):
         self.score_widget.setText(f'<font color="#A7ED90">Richtige Antworten: {self.correct_answer}'
                                   f'</font><br><font color="#FF5159">Falsche Antworten: {self.false_answer}</font>')
 
+    def generate_factors_and_product(self) -> ((int, int), int):
+        if self.button_set_difficulty_easy.isChecked():
+            factors = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            same_factor = random.choice(factors)
+            self.first_factor = same_factor
+            self.second_factor = same_factor
 
-def generate_factors_and_product() -> ((int, int), int):
-    first_factor = random.randint(0, 20)
-    second_factor = random.randint(0, 20)
-    product = first_factor * second_factor
+        if self.button_set_difficulty_medium.isChecked():
+            self.first_factor = random.randint(0, 10)
+            self.second_factor = random.randint(0, 10)
 
-    return (first_factor, second_factor), product
+        if self.button_set_difficulty_hard.isChecked():
+            factors = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+            same_factor = random.choice(factors)
+            self.first_factor = same_factor
+            self.second_factor = same_factor
+
+        if self.button_set_difficulty_default.isChecked():
+            self.first_factor = random.randint(0, 20)
+            self.second_factor = random.randint(0, 20)
+
+        self.product = self.first_factor * self.second_factor
+        return (self.first_factor, self.second_factor), self.product
 
 
 app = QApplication([])
