@@ -24,6 +24,7 @@ import random
 import json
 import os
 import platformdirs
+import collections
 
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QWidget, QGridLayout, QPushButton, QDialog,\
@@ -199,6 +200,8 @@ class MainWindow(QMainWindow):
         self.button_set_difficulty.addAction(self.button_set_difficulty_hard)
         self.button_set_difficulty.addAction(self.button_set_difficulty_default)
 
+        self.recently_generated_factors_and_products = collections.deque([], 3)
+
         self.first_factor = 0
         self.second_factor = 0
         self.product = 0
@@ -265,8 +268,15 @@ class MainWindow(QMainWindow):
         self.question_widget.setText(f'Was ist {first_factor} * {second_factor}?')
 
     def set_newly_generated_factors_and_product(self) -> None:
-        factors, self.product = self.generate_factors_and_product()
+        newly_generated_factors_and_product = self.generate_factors_and_product()
+
+        while newly_generated_factors_and_product in self.recently_generated_factors_and_products:
+            newly_generated_factors_and_product = self.generate_factors_and_product()
+
+        factors, self.product = newly_generated_factors_and_product
         self.first_factor, self.second_factor = factors
+
+        self.recently_generated_factors_and_products.append(newly_generated_factors_and_product)
 
     def __init_answer_widget(self) -> QLineEdit:
         widget = QLineEdit(self)
